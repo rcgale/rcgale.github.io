@@ -3,6 +3,7 @@ layout: post
 title:  "Partial fractions and telescoping series"
 date:   2021-04-11 14:52:00 -0700
 categories: math notes
+tags: calculus
 ---
 
 Factorize to find the two denominators we want.

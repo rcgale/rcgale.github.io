@@ -305,7 +305,7 @@ Vue.component('sigmoid-tax-plot', {
                     </span>
                 </div>
             </div>
-            <div style="height: 500px">
+            <div style="height: 300px">
                 <canvas ref="chart-canvas" style="height: 100%"></canvas>
             </div>
             <div v-if="!sigmoid">

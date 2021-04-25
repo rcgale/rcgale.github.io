@@ -159,7 +159,7 @@ Vue.component('sigmoid-tax-plot', {
                     data: this.linspace(this.xMin, this.xMax, 100).map(
                         (x) => ({
                             x: x,
-                            y: 100 * (this.sigB + (this.sigR - this.sigB) / 
+                            y: (100 * this.sigB) + 100 * ((this.sigR - this.sigB) / 
                                 (1 + 10**(-2*(x-this.sigM)/(this.sigW*this.sigM))))
                         })
                     ),

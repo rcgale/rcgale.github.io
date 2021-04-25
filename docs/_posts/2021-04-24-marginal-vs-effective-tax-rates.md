@@ -93,7 +93,7 @@ consider such a thing, but I thought it would be interesting to explore. Enjoy!
 
 $$
 \begin{align*}
-S(I) = b+\frac{r-b}{1+10^{\frac{-2(I-m)}{w}}}
+S(I) = (r-h)+\frac{h}{1+10^{\frac{-2(I-m)}{w}}}
 \end{align*}
 $$
 
@@ -126,7 +126,7 @@ Vue.component('sigmoid-tax-plot', {
             sigM: 100000,
             sigR: 0.37,
             sigW: 400000,
-            sigB: 0.0,
+            sigH: 0.37,
             chart: null,
         }
     },
@@ -159,7 +159,7 @@ Vue.component('sigmoid-tax-plot', {
                     data: this.linspace(this.xMin, this.xMax, 100).map(
                         (x) => ({
                             x: x,
-                            y: (100 * this.sigB) + 100 * ((this.sigR - this.sigB) / 
+                            y: 100 * ((this.sigR - this.sigH) + (this.sigH) / 
                                 (1 + 10**(-2*(x-this.sigM)/(this.sigW))))
                         })
                     ),
@@ -215,12 +215,12 @@ Vue.component('sigmoid-tax-plot', {
     },
     watch: {
         brackets(va) { this.refreshChart(); },
-        sigM(val) { this.refreshChart(); },
-        sigW(val) { this.refreshChart(); },
-        sigR(val) { this.refreshChart(); },
-        sigB(val) { this.refreshChart(); },
-        xMin(val) { this.refreshChart(); },
-        xMax(val) { this.refreshChart(); },
+        sigM(val) { this.sigM = 1.0 * this.sigM; this.refreshChart(); },
+        sigW(val) { this.sigW = 1.0 * this.sigW; this.refreshChart(); },
+        sigR(val) { this.sigR = 1.0 * this.sigR; this.refreshChart(); },
+        sigH(val) { this.sigH = 1.0 * this.sigH; this.refreshChart(); },
+        xMin(val) { this.xMin = 1.0 * this.xMin; this.refreshChart(); },
+        xMax(val) { this.xMax = 1.0 * this.xMax; this.refreshChart(); },
     },
     mounted() {
         this.chart = new Chart(
@@ -339,19 +339,19 @@ Vue.component('sigmoid-tax-plot', {
                     <input type="range" min="0" max="3000000" step="10000" v-model="sigM" class="slider">
                 </div>
                 <div>
-                    <strong>Sigmoid width:</strong><br>
-                    (w = <input type="number" min="1" max="3000000" step="10000" v-model="sigW">)
-                    <input type="range" min="1" max="3000000" step="10000" v-model="sigW" class="slider">
-                </div>
-                <div>
                     <strong>Sigmoid maximum rate: </strong><br>
                     (r = <input type="number" min="0" max="1" step="0.01" v-model="sigR">)
                     <input type="range" min="0" max="1" step="0.001" v-model="sigR" class="slider">
                 </div>
                 <div>
-                    <strong>Sigmoid minimum rate:</strong><br>
-                    (b = <input type="number" min="0" max="1" step="0.01" v-model="sigB">)
-                    <input type="range" min="0" max="1" step="0.001" v-model="sigB" class="slider">
+                    <strong>Sigmoid width:</strong><br>
+                    (w = <input type="number" min="1" max="3000000" step="10000" v-model="sigW">)
+                    <input type="range" min="1" max="3000000" step="10000" v-model="sigW" class="slider">
+                </div>
+                <div>
+                    <strong>Sigmoid height:</strong><br>
+                    (b = <input type="number" min="0" max="1" step="0.01" v-model="sigH">)
+                    <input type="range" min="0" max="1" step="0.001" v-model="sigH" class="slider">
                 </div>
             </div>
         </div>

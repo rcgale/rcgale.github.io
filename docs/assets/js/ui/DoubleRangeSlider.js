@@ -1,6 +1,6 @@
 // source: https://dev.to/mandrewcito/vuejs-double-range-slider-component-2c5a
 
-import ZbRangeSlider from './ZbRangeSlider.js'
+import ZbRangeSlider from './ZBRangeSlider.js'
 
 // call reset if needed
 // newRangeSlider.reset();

@@ -335,8 +335,8 @@ Vue.component('sigmoid-tax-plot', {
             <div v-if="sigmoid">
                 <div>
                     <strong>Sigmoid midpoint:</strong><br>
-                    (m = $<input type="number" min="0" max="300000" step="10000" v-model="sigM">)
-                    <input type="range" min="0" max="300000" step="10000" v-model="sigM" class="slider">
+                    (m = $<input type="number" min="0" max="3000000" step="10000" v-model="sigM">)
+                    <input type="range" min="0" max="3000000" step="10000" v-model="sigM" class="slider">
                 </div>
                 <div>
                     <strong>Sigmoid width:</strong><br>

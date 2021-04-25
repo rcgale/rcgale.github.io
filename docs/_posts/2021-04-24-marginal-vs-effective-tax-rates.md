@@ -93,7 +93,7 @@ consider such a thing, but I thought it would be interesting to explore. Enjoy!
 
 $$
 \begin{align*}
-S(I) = b+\frac{r-b}{1+10^{\frac{-2(I-m)}{w\cdot I}}}
+S(I) = b+\frac{r-b}{1+10^{\frac{-2(I-m)}{w}}}
 \end{align*}
 $$
 
@@ -125,7 +125,7 @@ Vue.component('sigmoid-tax-plot', {
 
             sigM: 100000,
             sigR: 0.37,
-            sigW: 4,
+            sigW: 400000,
             sigB: 0.0,
             chart: null,
         }
@@ -160,7 +160,7 @@ Vue.component('sigmoid-tax-plot', {
                         (x) => ({
                             x: x,
                             y: (100 * this.sigB) + 100 * ((this.sigR - this.sigB) / 
-                                (1 + 10**(-2*(x-this.sigM)/(this.sigW*this.sigM))))
+                                (1 + 10**(-2*(x-this.sigM)/(this.sigW))))
                         })
                     ),
                     fill: false,
@@ -340,8 +340,8 @@ Vue.component('sigmoid-tax-plot', {
                 </div>
                 <div>
                     <strong>Sigmoid width:</strong><br>
-                    (w = <input type="number" min="0.00001" max="20" step="0.1" v-model="sigW">)
-                    <input type="range" min="0.00001" max="20" step="0.1"  v-model="sigW" class="slider">
+                    (w = <input type="number" min="1" max="3000000" step="10000" v-model="sigW">)
+                    <input type="range" min="1" max="3000000" step="10000" v-model="sigW" class="slider">
                 </div>
                 <div>
                     <strong>Sigmoid maximum rate: </strong><br>

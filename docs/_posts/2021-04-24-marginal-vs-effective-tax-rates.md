@@ -321,37 +321,37 @@ Vue.component('sigmoid-tax-plot', {
             </div>
             <div v-if="sigmoid">
                 <div>
-                    <input type="range" min="0" max="3000000" step="10000" v-model="xMin" class="slider">
-                    Plot minimum income:
+                    Plot minimum income:<br>
                     $<input type="number" min="0" max="3000000" step="10000" v-model="xMin">
+                    <input type="range" min="0" max="3000000" step="10000" v-model="xMin" class="slider">
                 </div>
                 <div>
-                    <input type="range" min="0" max="3000000" step="10000" v-model="xMax" class="slider">
-                    Plot maximum income:
+                    Plot maximum income:<br>
                     $<input type="number" min="0" max="3000000" step="10000" v-model="xMax">
+                    <input type="range" min="0" max="3000000" step="10000" v-model="xMax" class="slider">
                 </div>
                 <hr>
             </div>
             <div v-if="sigmoid">
                 <div>
-                    <input type="range" min="0" max="300000" step="10000" v-model="sigM" class="slider">
-                    Sigmoid midpoint:
+                    <strong>Sigmoid midpoint:</strong><br>
                     (m = $<input type="number" min="0" max="300000" step="10000" v-model="sigM">)
+                    <input type="range" min="0" max="300000" step="10000" v-model="sigM" class="slider">
                 </div>
                 <div>
-                    <input type="range" min="0.00001" max="20" step="0.1"  v-model="sigW" class="slider">
-                    Sigmoid width:
+                    <strong>Sigmoid width:</strong><br>
                     (w = <input type="number" min="0.00001" max="20" step="0.1" v-model="sigW">)
+                    <input type="range" min="0.00001" max="20" step="0.1"  v-model="sigW" class="slider">
                 </div>
                 <div>
-                    <input type="range" min="0" max="1" step="0.001" v-model="sigR" class="slider">
-                    Sigmoid maximum rate 
+                    <strong>Sigmoid maximum rate: </strong><br>
                     (r = <input type="number" min="0" max="1" step="0.01" v-model="sigR">)
+                    <input type="range" min="0" max="1" step="0.001" v-model="sigR" class="slider">
                 </div>
                 <div>
-                    <input type="range" min="0" max="1" step="0.001" v-model="sigB" class="slider">
-                    Sigmoid minimum rate:
+                    <strong>Sigmoid minimum rate:</strong><br>
                     (b = <input type="number" min="0" max="1" step="0.01" v-model="sigB">)
+                    <input type="range" min="0" max="1" step="0.001" v-model="sigB" class="slider">
                 </div>
             </div>
         </div>

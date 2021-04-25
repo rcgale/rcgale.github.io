@@ -3,7 +3,8 @@ layout: post
 title:  "Convergence tests for series"
 date:   2021-04-17 15:29:00 -0700
 categories: [math notes]
-tags: calculus 
+tags: calculus
+published: false
 ---
 
 **NOTE**: Some of the following borrows phrasing from materials from [PCC](https://www.pcc.edu) Math 253.

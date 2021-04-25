@@ -10,37 +10,9 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-  <!-- for mathjax support -->
-<script>
-MathJax = {
-  tex: {
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    macros: {
-      shorteqnote: ["&  & \\text{#1} ", 1],
-      bold: ["{\\bf #1}", 1]
-    },
-  },
-  svg: {
-    displayAlign: "left",
-    displayIndent: "2em"
-  },
-};
-</script>
-<script type="text/javascript" id="MathJax-script" async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
-</script>
+  {%- include scripts.html -%}
 
-
-<!-- for mathquill support -->
-<link rel="stylesheet" href="/assets/mathquill-0.10.1/mathquill.css"/>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script src="/assets/mathquill-0.10.1/mathquill.min.js"></script>
-<script>
-  var MQ = MathQuill.getInterface(2);
-</script>
-
-
-{% seo %}
+  {% seo %}
   </head>
 
   <body>

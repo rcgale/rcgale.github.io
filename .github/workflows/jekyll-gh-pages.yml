@@ -42,10 +42,10 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           build_only: true
           build_dir: ./build
-      - name: Pack it up
-        run: cd build && tar -czf ../github-pages.tar.gz .
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
+        with:
+          path: build
 
   # Deployment job
   deploy:

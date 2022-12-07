@@ -28,7 +28,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Cache Jekyll Build
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile') }}
@@ -40,6 +40,10 @@ jobs:
         uses: helaili/jekyll-action@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          build_only: true
+          build_dir: ./build
+      - name: Pack it up
+        run: cd build && tar -czf ../github-pages.tar.gz .
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
 

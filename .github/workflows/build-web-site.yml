@@ -34,7 +34,7 @@ jobs:
           node-version: '16'
           cache: 'npm'
       - name: 🏗 NPM Install
-        run: npm install
+        run: npm install && npm install --save @phonologic/viewer@latest
       - name: 🚜 Build sandbox
         run: npm run build
 

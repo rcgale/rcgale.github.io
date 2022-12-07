@@ -1,0 +1,18 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "homepage": "https://robertcgale.com/phonologic",
+  "scripts": {
+    "prebuild": "npm run copy:temp && npm run copy:env",
+    "build": "cd temp && npm run build && copyfiles -E \"./build/**\" ..",
+    "start": "cd temp && npm run start",
+    "copy:temp": "(cd $(npm ls @phonologic/viewer -p) && copyfiles -E -F \"./**\" $INIT_CWD/temp)",
+    "copy:env": "copyfiles -a .env* ./temp"
+  },
+  "devDependencies": {
+    "copyfiles": "^2.4.1"
+  },
+  "dependencies": {
+    "@phonologic/viewer": "^0.1.0-alpha"
+  }
+}

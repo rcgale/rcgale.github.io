@@ -27,7 +27,18 @@ jobs:
     steps:
       - name: 📂 Checkout
         uses: actions/checkout@v3
-      - name: 💎 setup ruby
+
+      - name: 📚 Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+      - name: 🏗 NPM Install
+        run: npm install
+      - name: 🚜 Build sandbox
+        run: npm install
+
+      - name: 💎 Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.7
@@ -35,6 +46,7 @@ jobs:
         uses: limjh16/jekyll-action-ts@v2
         with:
           enable_cache: true
+
       - name: 🚠 Upload artifact
         uses: actions/upload-pages-artifact@v1
 

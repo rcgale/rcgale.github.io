@@ -1,0 +1,13 @@
+{
+  "workspaces": [
+    "phonologic"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "postbuild": "npm run copy:phonologic",
+    "copy:phonologic": "cd phonologic/build && copyfiles -E \"**\" $INIT_CWD/docs/sandbox/phonologic"
+  },
+  "devDependencies": {
+    "copyfiles": "^2.4.1"
+  }
+}

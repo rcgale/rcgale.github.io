@@ -40,7 +40,7 @@ plugins:
 markdown: kramdown
 
 scholar:
-  style: _bibliography/acl
+  style: http://www.zotero.org/styles/association-for-computational-linguistics
   sort_by: year, month
   order: descending
 

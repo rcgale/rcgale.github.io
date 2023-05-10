@@ -1,7 +1,41 @@
+ul {
+  padding-left: 2em;
+}
+ul li {
+  padding-left: 0;
+}
+
+header {
+  margin-bottom: 0;
+}
+
+header h1 {
+    line-height: 1.0em!important;
+}
+
 header h1 a {
-    color: #303030
+    color: #303030;
 }
 
 h3 {
     color: #303030
+}
+
+header h2 small {
+    font-size: 1.2rem;
+    margin-bottom: 0;
+}
+
+ol.bibliography li {
+    margin-bottom: 0.7em;
+    padding-left: 2em;
+    text-indent: -2em;
+}
+
+ol.bibliography li i {
+    font-style: italic;
+}
+
+.home ol.bibliography li {
+    list-style: none
 }

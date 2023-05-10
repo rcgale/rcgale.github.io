@@ -1,0 +1,234 @@
+@article{asgari_automatic_2020,
+ abstract = {Background:
+Current conventional cognitive assessments are limited in their efficiency and
+sensitivity, often relying on a single score such as the total correct items. Typically, multiple features of
+response go uncaptured.
+
+
+Objectives:
+We aim to explore a new set of automatically derived features from the Digit Span (DS)
+task that address some of the drawbacks in the conventional scoring and are also useful for distinguishing
+subjects with Mild Cognitive Impairment (MCI) from those with intact cognition.
+
+
+Methods:
+Audio-recordings of the DS tests administered to 85 subjects (22 MCI and 63 healthy controls,
+mean age 90.2 years) were transcribed using an Automatic Speech Recognition (ASR) system.
+Next, five correctness measures were generated from Levenshtein distance analysis of responses: number
+correct, incorrect, deleted, inserted, and substituted words compared to the test item. These per-item
+features were aggregated across all test items for both Forward Digit Span (FDS) and Backward Digit
+Span (BDS) tasks using summary statistical functions, constructing a global feature vector representing
+the detailed assessment of each subject’s response. A support vector machine classifier distinguished
+MCI from cognitively intact participants.
+
+
+Results:
+Conventional DS scores did not differentiate MCI participants from controls. The automated
+multi-feature DS-derived metric achieved 73\% on AUC-ROC of the SVM classifier, independent of
+additional clinical features (77\% when combined with demographic features of subjects); well above
+chance, 50\%.
+
+
+Conclusion:
+Our analysis verifies the effectiveness of introduced measures, solely derived from the DS
+task, in the context of differentiating subjects with MCI from those with intact cognition.},
+ author = {Asgari, Meysam and Gale, Robert and Wild, Katherine and Dodge, Hiroko and Kaye, Jeffrey},
+ doi = {10.2174/1567205017666201008110854},
+ issn = {15672050},
+ journal = {Current Alzheimer Research},
+ language = {en},
+ month = {November},
+ number = {7},
+ pages = {658--666},
+ shorttitle = {Automatic {Assessment} of {Cognitive} {Tests} for {Differentiating} {Mild} {Cognitive} {Impairment}},
+ title = {Automatic {Assessment} of {Cognitive} {Tests} for {Differentiating} {Mild} {Cognitive} {Impairment}: {A} {Proof} of {Concept} {Study} of the {Digit} {Span} {Task}},
+ url = {https://www.eurekaselect.com/186733/article},
+ urldate = {2023-05-10},
+ volume = {17},
+ year = {2020}
+}
+
+@article{asgari_p1-445_2019,
+ author = {Asgari, Meysam and Gale, Robert and Kaye, Jeffrey A. and Dodge, Hiroko H.},
+ doi = {10.1016/j.jalz.2019.06.1050},
+ issn = {15525260},
+ journal = {Alzheimer's \& Dementia},
+ language = {en},
+ month = {July},
+ pages = {437--437},
+ title = {Automatic Assessment of Conventional Cognitive Tests for Differentiating Mild Cognitive Impairment: a Proof of Concept Study of the Digit Span Task},
+ urldate = {2023-05-10},
+ volume = {15},
+ year = {2019}
+}
+
+@article{casilio_paralg_2023,
+ abstract = {Purpose:
+A preliminary version of a paraphasia classification algorithm (henceforth called ParAlg) has previously been shown to be a viable method for coding picture naming errors. The purpose of this study is to present an updated version of ParAlg, which uses multinomial classification, and comprehensively evaluate its performance when using two different forms of transcribed input.
+
+
+Method:
+
+A subset of 11,999 archival responses produced on the Philadelphia Naming Test were classified into six cardinal paraphasia types using ParAlg under two transcription configurations: (a) using phonemic transcriptions for responses exclusively (
+phonemic-only
+) and (b) using phonemic transcriptions for nonlexical responses and orthographic transcriptions for lexical responses (
+orthographic-lexical
+). Agreement was quantified by comparing ParAlg-generated paraphasia codes between configurations and relative to human-annotated codes using four metrics (positive predictive value, sensitivity, specificity, and F1 score). An item-level qualitative analysis of misclassifications under the best performing configuration was also completed to identify the source and nature of coding discrepancies.
+
+
+
+Results:
+
+Agreement between ParAlg-generated and human-annotated codes was high, although the
+orthographic-lexical
+configuration outperformed
+phonemic-only
+(weighted-average F1 scores of .78 and .87, respectively). A qualitative analysis of the
+orthographic-lexical
+configuration revealed a mix of human- and ParAlg-related misclassifications, the former of which were related primarily to phonological similarity judgments whereas the latter were due to semantic similarity assignment.
+
+
+
+Conclusions:
+ParAlg is an accurate and efficient alternative to manual scoring of paraphasias, particularly when lexical responses are orthographically transcribed. With further development, it has the potential to be a useful software application for anomia assessment.
+
+
+Supplemental Material:
+
+https://doi.org/10.23641/asha.22087763},
+ author = {Casilio, Marianne and Fergadiotis, Gerasimos and Salem, Alexandra C. and Gale, Robert C. and McKinney-Bock, Katy and Bedrick, Steven},
+ doi = {10.1044/2022_JSLHR-22-00255},
+ issn = {1092-4388, 1558-9102},
+ journal = {Journal of Speech, Language, and Hearing Research},
+ language = {en},
+ month = {February},
+ pages = {1--21},
+ shorttitle = {{ParAlg}},
+ title = {{ParAlg}: {A} {Paraphasia} {Algorithm} for {Multinomial} {Classification} of {Picture} {Naming} {Errors}},
+ urldate = {2023-05-10},
+ year = {2023}
+}
+
+@article{chen_improving_2020,
+ abstract = {Introduction: Clinically relevant information can go uncaptured in the conventional scoring of a verbal fluency test. We hypothesize that characterizing the temporal aspects of the response through a set of time related measures will be useful in distinguishing those with MCI from cognitively intact controls. Methods: Audio recordings of an animal fluency test administered to 70 demographically matched older adults (mean age 90.4 years), 28 with mild cognitive impairment (MCI) and 42 cognitively intact (CI) were professionally transcribed and fed into an automatic speech recognition (ASR) system to estimate the start time of each recalled word in the response. Next, we semantically cluster participant generated animal names and through a novel set of time-based measures, we characterize the semantic search strategy of subjects in retrieving words from animal name clusters. This set of time-based features along with standard count-based features (e.g., number of correctly retrieved animal names) were then used in a machine learning algorithm trained for distinguishing those with MCI from CI controls. Results: The combination of both count-based and time-based features, automatically derived from the test response, achieved 77\% on AUC-ROC of the support vector machine (SVM) classifier, outperforming the model trained only on the raw test score (AUC, 65\%), and well above the chance model (AUC, 50\%). Conclusion: This approach supports the value of introducing time-based measures to the assessment of verbal fluency in the context of this generative task differentiating subjects with MCI from those with intact cognition.},
+ author = {Chen, Liu and Asgari, Meysam and Gale, Robert and Wild, Katherine and Dodge, Hiroko and Kaye, Jeffrey},
+ doi = {10.3389/fpsyg.2020.00535},
+ issn = {1664-1078},
+ journal = {Frontiers in Psychology},
+ keywords = {Animal fluency, Computerized assessment, Neuropsychological Tests, biomarkers, mild cognitive impairment (MCI), short term memory},
+ month = {April},
+ pages = {535},
+ title = {Improving the {Assessment} of {Mild} {Cognitive} {Impairment} in {Advanced} {Age} {With} a {Novel} {Multi}-{Feature} {Automated} {Speech} and {Language} {Analysis} of {Verbal} {Fluency}},
+ url = {https://www.frontiersin.org/article/10.3389/fpsyg.2020.00535/full},
+ urldate = {2023-05-10},
+ volume = {11},
+ year = {2020}
+}
+
+@ARTICLE{10.3389/fpsyg.2021.668401,
+
+AUTHOR={Gale, Robert and Bird, Julie and Wang, Yiyi and van Santen, Jan and Prud'hommeaux, Emily and Dolata, Jill and Asgari, Meysam},
+
+TITLE={Automated Scoring of Tablet-Administered Expressive Language Tests},
+
+JOURNAL={Frontiers in Psychology},
+
+VOLUME={12},
+
+YEAR={2021},
+
+URL={https://www.frontiersin.org/articles/10.3389/fpsyg.2021.668401},
+
+DOI={10.3389/fpsyg.2021.668401},
+
+ISSN={1664-1078},
+
+ABSTRACT={Speech and language impairments are common pediatric conditions, with as many as 10% of children experiencing one or both at some point during development. Expressive language disorders in particular often go undiagnosed, underscoring the immediate need for assessments of expressive language that can be administered and scored reliably and objectively. In this paper, we present a set of highly accurate computational models for automatically scoring several common expressive language tasks. In our assessment framework, instructions and stimuli are presented to the child on a tablet computer, which records the child's responses in real time, while a clinician controls the pace and presentation of the tasks using a second tablet. The recorded responses for four distinct expressive language tasks (expressive vocabulary, word structure, recalling sentences, and formulated sentences) are then scored using traditional paper-and-pencil scoring and using machine learning methods relying on a deep neural network-based language representation model. All four tasks can be scored automatically from both clean and verbatim speech transcripts with very high accuracy at the item level (83−99%). In addition, these automated scores correlate strongly and significantly (ρ = 0.76–0.99, p < 0.001) with manual item-level, raw, and scaled scores. These results point to the utility and potential of automated computationally-driven methods of both administering and scoring expressive language tasks for pediatric developmental language evaluation.}
+}
+
+@inproceedings{gale_automatic_2020,
+ abstract = {This study describes a fully automated method of expressive language assessment based on vocal responses of children to a sentence repetition task (SRT), a language test that taps into core language skills. Our proposed method automatically transcribes the vocal responses using a test-specific automatic speech recognition system. From the transcriptions, a regression model predicts the gold standard test scores provided by speech-language pathologists. Our preliminary experimental results on audio recordings of 104 children (43 with typical development and 61 with a neurodevelopmental disorder) verifies the feasibility of the proposed automatic method for predicting gold standard scores on this language test, with averaged mean absolute error of 6.52 (on a observed score range from 0 to 90 with a mean value of 49.56) between observed and predicted ratings.Clinical relevance-We describe the use of fully automatic voice-based scoring in language assessment including the clinical impact this development may have on the field of speech-language pathology. The automated test also creates a technological foundation for the computerization of a broad array of tests for voice-based language assessment.},
+ author = {Gale, Robert and Dolata, Jill and Prud’hommeaux, Emily and van Santen, Jan and Asgari, Meysam},
+ booktitle = {2020 42nd {Annual} {International} {Conference} of the {IEEE} {Engineering} in {Medicine} {Biology} {Society} ({EMBC})},
+ doi = {10.1109/EMBC44109.2020.9175264},
+ keywords = {Atmospheric measurements, Gold, Hidden Markov models, Particle measurements, Predictive models, Standards, Task analysis},
+ month = {July},
+ pages = {6111--6114},
+ title = {Automatic {Assessment} of {Language} {Ability} in {Children} with and without {Typical} {Development}},
+ year = {2020}
+}
+
+@inproceedings{gale_improving_2019,
+ abstract = {This study explores building and improving an automatic speech recognition (ASR) system for children aged 6-9 years and diagnosed with autism spectrum disorder (ASD), language impairment (LI), or both. Working with only 1.5 hours of target data in which children perform the Clinical Evaluation of Language Fundamentals Recalling Sentences task, we apply deep neural network (DNN) weight transfer techniques to adapt a large DNN model trained on the LibriSpeech corpus of adult speech. To begin, we aim to ﬁnd the best proportional training rates of the DNN layers. Our best conﬁguration yields a 29.38\% word error rate (WER). Using this conﬁguration, we explore the effects of quantity and similarity of data augmentation in transfer learning. We augment our training with portions of the OGI Kids’ Corpus, adding 4.6 hours of typically developing speakers aged kindergarten through 3rd grade. We ﬁnd that 2nd grade data alone — approximately the mean age of the target data —outperforms other grades and all the sets combined. Doubling the data for 1st, 2nd, and 3rd grade, we again compare each grade as well as pairs of grades. We ﬁnd the combination of 1st and 2nd grade performs best at a 26.21\% WER.},
+ author = {Gale, Robert and Chen, Liu and Dolata, Jill and Santen, Jan van and Asgari, Meysam},
+ booktitle = {Interspeech 2019},
+ doi = {10.21437/Interspeech.2019-3161},
+ keywords = {Mine},
+ language = {en},
+ month = {September},
+ pages = {11--15},
+ publisher = {ISCA},
+ title = {Improving {ASR} {Systems} for {Children} with {Autism} and {Language} {Impairment} {Using} {Domain}-{Focused} {DNN} {Transfer} {Techniques}},
+ url = {http://www.isca-speech.org/archive/Interspeech_2019/abstracts/3161.html},
+ urldate = {2021-07-02},
+ year = {2019}
+}
+
+@inproceedings{gale-etal-2022-post,
+    title = "The Post-Stroke Speech Transcription ({PSST}) Challenge",
+    author = "Gale, Robert C.  and
+      Fleegle, Mikala  and
+      Fergadiotis, Gerasimos  and
+      Bedrick, Steven",
+    booktitle = "Proceedings of the RaPID Workshop - Resources and ProcessIng of linguistic, para-linguistic and extra-linguistic Data from people with various forms of cognitive/psychiatric/developmental impairments - within the 13th Language Resources and Evaluation Conference",
+    month = jun,
+    year = "2022",
+    address = "Marseille, France",
+    publisher = "European Language Resources Association",
+    url = "https://aclanthology.org/2022.rapid-1.6",
+    pages = "41--55",
+    abstract = "We present the outcome of the Post-Stroke Speech Transcription (PSST) challenge. For the challenge, we prepared a new data resource of responses to two confrontation naming tests found in AphasiaBank, extracting audio and adding new phonemic transcripts for each response. The challenge consisted of two tasks. Task A asked challengers to build an automatic speech recognizer (ASR) for phonemic transcription of the PSST samples, evaluated in terms of phoneme error rate (PER) as well as a finer-grained metric derived from phonological feature theory, feature error rate (FER). The best model had a 9.9{\%} FER / 20.0{\%} PER, improving on our baseline by a relative 18{\%} and 24{\%}, respectively. Task B approximated a downstream assessment task, asking challengers to identify whether each recording contained a correctly pronounced target word. Challengers were unable to improve on the baseline algorithm; however, using this algorithm with the improved transcripts from Task A resulted in 92.8{\%} accuracy / 0.921 F1, a relative improvement of 2.8{\%} and 3.3{\%}, respectively.",
+}
+
+@inproceedings{kain_diacritic-level_2020,
+ abstract = {Speech sound disorders affect 10\% of preschool and school-age children, adversely affecting their communication, academic performance, and interaction level. Effective pronunciation training requires prolonged supervised practice and interaction. Unfortunately, many children have limited or no access to a speech-language pathologist. Computer-assisted pronunciation training has the potential for being a highly effective teaching aid; however, to-date such systems remain incapable of identifying pronunciation errors with sufficient accuracy. We propose a system that combines a multi-target architecture with weighted finite-state transducers to first segment and then analyze an utterance in terms of its phonological features. We analyze a corpus of 90 children aged 4–7 and find differences between the typically developing and the speech disordered groups.},
+ author = {Kain, Alexander and Roten, Amie and Gale, Robert},
+ booktitle = {{ICASSP} 2020 - 2020 {IEEE} {International} {Conference} on {Acoustics}, {Speech} and {Signal} {Processing} ({ICASSP})},
+ doi = {10.1109/ICASSP40776.2020.9053836},
+ keywords = {Aging, Computational modeling, Feature detection, Signal processing, Speech processing, Training, Transducers, computer-assisted pronunciation analysis and training, phonological features},
+ month = {May},
+ pages = {8084--8088},
+ title = {Diacritic-{Level} {Pronunciation} {Analysis} {Using} {Phonological} {Features}},
+ url = {https://ieeexplore.ieee.org/document/9053836/},
+ urldate = {2023-05-10},
+ year = {2020}
+}
+
+@article{salem_refining_2023,
+ abstract = {Purpose:
+ParAlg (Paraphasia Algorithms) is a software that automatically categorizes a person with aphasia's naming error (paraphasia) in relation to its intended target on a picture-naming test. These classifications (based on lexicality as well as semantic, phonological, and morphological similarity to the target) are important for characterizing an individual's word-finding deficits or anomia. In this study, we applied a modern language model called BERT (Bidirectional Encoder Representations from Transformers) as a semantic classifier and evaluated its performance against ParAlg's original word2vec model.
+
+
+Method:
+We used a set of 11,999 paraphasias produced during the Philadelphia Naming Test. We trained ParAlg with word2vec or BERT and compared their performance to humans. Finally, we evaluated BERT's performance in terms of word-sense selection and conducted an item-level discrepancy analysis to identify which aspects of semantic similarity are most challenging to classify.
+
+
+Results:
+Compared with word2vec, BERT qualitatively reduced word-sense issues and quantitatively reduced semantic classification errors by almost half. A large percentage of errors were attributable to semantic ambiguity. Of the possible semantic similarity subtypes, responses that were associated with or category coordinates of the intended target were most likely to be misclassified by both models and humans alike.
+
+
+Conclusions:
+BERT outperforms word2vec as a semantic classifier, partially due to its superior handling of polysemy. This work is an important step for further establishing ParAlg as an accurate assessment tool.},
+ author = {Salem, Alexandra C. and Gale, Robert and Casilio, Marianne and Fleegle, Mikala and Fergadiotis, Gerasimos and Bedrick, Steven},
+ doi = {10.1044/2022_JSLHR-22-00277},
+ issn = {1092-4388, 1558-9102},
+ journal = {Journal of Speech, Language, and Hearing Research},
+ language = {en},
+ month = {January},
+ number = {1},
+ pages = {206--220},
+ title = {Refining {Semantic} {Similarity} of {Paraphasias} {Using} a {Contextual} {Language} {Model}},
+ urldate = {2023-05-10},
+ volume = {66},
+ year = {2023}
+}

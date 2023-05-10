@@ -21,7 +21,8 @@
 title: Robert C. Gale
 email: robert@robertcgale.com
 description: >- # this means to ignore newlines until "baseurl:"
-  This site contains notes I'm making for myself. Maybe you'll find them useful too though.
+  <small>/ˈɹɑb.ɚt ɡeɪl/ &bull; he/they/any</small><br />
+  speech & language technology researcher with a clinical focus
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://robertcgale.com" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: robertcgale
@@ -34,8 +35,14 @@ permalink: /:categories/:title/
 theme: minima
 plugins:
   - jekyll-feed
+  - jekyll-scholar
 
 markdown: kramdown
+
+scholar:
+  style: _bibliography/acl
+  sort_by: year, month
+  order: descending
 
 
 # Exclude from processing.

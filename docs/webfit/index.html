@@ -1,0 +1,302 @@
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <link rel="stylesheet" type="text/css" href="/assets/css/print.css" media="print">
+  </head>
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Webfit Demo</h1>
+        </header>
+
+        <section id="main_content">
+            <div id="webfit-app"></div>
+            <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+            <script type="module">
+
+            Vue.component('input-form', {
+                props: ['inputs', 'labels'],
+                emits: ['update:inputs'],
+                data: function() {
+                    return {
+                        timeSteps: ["1s", "5s"],
+                    };
+                },
+                computed: {
+                    model: {
+                      get() { return this.inputs; },
+                      set(value) { this.$emit('update:inputs', value); }
+                    }
+                },
+                template: `
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th v-for="label in labels">
+                                        {{label}}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody v-for="row, rowIdx in model">
+                                <tr>
+                                    <td rowspan="2" style="vertical-align: middle;">
+                                        {{timeSteps[rowIdx]}}
+                                    </td>
+                                    <td v-for="value, valueIdx in row">
+                                        <input type="number" v-model:value.number="model[rowIdx][valueIdx]" style="width: 5em;"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                `
+            });
+
+            Vue.component('result-params', {
+                props: ['result', 'labels'],
+                methods: {
+                    formatNumber(x, digits) {
+                        return x.toLocaleString(undefined, {maximumFractionDigits: digits || 20})
+                    },
+                },
+                template: `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>S</th>
+                                <th>P</th>
+                                <th>Decay</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{formatNumber(result.s)}}</td>
+                                <td>{{formatNumber(result.p)}}</td>
+                                <td>{{formatNumber(result.decay)}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `
+            });
+
+            Vue.component('result-dist', {
+                props: ['result', 'labels'],
+                data: function() {
+                    return {
+                        timeStepsInput: ["1s", "5s"],
+                        timeStepsOutput: ["ts=8", "ts=25"],
+                    };
+                },
+                template: `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th v-for="label in labels">
+                                    {{label}}
+                                </th>
+                                <th>RMSD</th>
+                            </tr>
+                        </thead>
+                        <tbody v-for="row, rowIdx in result.inputs">
+                            <tr>
+                                <td>
+                                    {{timeStepsInput[rowIdx]}}
+                                </td>
+                                <td v-for="value, valueIdx in result.inputs[rowIdx]">
+                                    <span v-if="!Number.isNaN(value)" style="font-style: italic">{{value.toFixed(4)}}</span>&nbsp;
+                                </td>
+                                <td rowspan="2" style="vertical-align: middle;">
+                                    {{result.rmsd[rowIdx].toFixed(4)}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {{timeStepsOutput[rowIdx]}}
+                                </td>
+                                <td v-for="value, valueIdx in result.distribution[rowIdx]">
+                                    <span v-if="!Number.isNaN(value)">{{value.toFixed(4)}}</span>&nbsp;
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `
+            });
+
+            Vue.component('form-dist-row', {
+                props: ['distribution'],
+                template: `
+                    <tr>
+                        <td rowspan="2" style="vertical-align: middle">
+                            {{ts}}
+                        </td>
+                        <td v-for="value, label in inputDistribution">
+                            <input type="number" v-model="value" style="width: 5em;"/>
+                        </td>
+                    </tr>
+                `
+            });
+
+            function MapFileService() {
+                let files = [];
+                return {
+                    async load(url) {
+                        if (!files.length) {
+                            let response = await fetch(url);
+                            let text = await response.text();
+                            files = await JSON.parse(text);
+                        }
+                        return files;
+                    }
+                }
+            }
+
+            Vue.prototype.$mapFileService = MapFileService();
+
+            Vue.component('results', {
+                props: ['inputs', 'labels', 'timeSteps'],
+                data: function() {
+                    return {
+                        result: null,
+                        mapDataLoaded: false,
+                        normalize: true,
+                        // inputs: [[NaN, NaN, NaN, NaN, NaN, NaN], [NaN, NaN, NaN, NaN, NaN, NaN]],
+                    };
+                },
+                mounted() {
+                    this.$mapFileService.load("./map-nonzero.json").then((mapData) => {
+                        this.mapDataLoaded = true;
+                    });
+                },
+                methods: {
+                    async loadMap(url) {
+                        let response = await fetch(url);
+                        let text = await response.text();
+                        return await JSON.parse(text);
+                    },
+                    async fit() {
+                        this.result = null;
+                        let target = this.target.map(row => [...row]);
+                        let [[s, p, decay], distribution] = await this.nearest(target);
+                        let error = [
+                            rmsd(distribution[0], target[0]),
+                            rmsd(distribution[1], target[1]),
+                        ];
+                        this.result = {
+                            inputs: target,
+                            s: s,
+                            p: p,
+                            decay: decay,
+                            distribution: distribution,
+                            rmsd: error
+                        }
+                    },
+                    async nearest(target) {
+                        let mapData = await this.$mapFileService.load("./map-nonzero.json");
+                        let [bestParam, bestDist] = min(mapData, ([parameters, dist]) => {
+                            return rmsd([...dist[0], ...dist[1]], [...target[0], ...target[1]]);
+                        });
+                        return [bestParam, bestDist];
+                    },
+                },
+                computed: {
+                    target() {
+                        if (!this.normalize) {
+                            return this.inputs;
+                        }
+                        return this.inputs.map(row => {
+                            let total = sum(row);
+                            return row.map(x => (x / total));
+                        });
+                    },
+                    ready() {
+                        return this.mapDataLoaded && sum(this.target[0]) > 0 && sum(this.target[1]) > 0;
+                    },
+                    resultsCurrent() {
+                        return this.result && JSON.stringify(this.result["inputs"]) == JSON.stringify(this.target);
+                    },
+                },
+                template: `
+                    <div>
+<!--                        <div>-->
+<!--                            <input id="checkbox-normalize" type="checkbox" v-model="normalize"/>-->
+<!--                            <label for="checkbox-normalize">Normalize input</label>-->
+<!--                        </div>-->
+                        <button :disabled="!ready" @click="fit">Fit</button>
+                        <div v-if="result" :class="{ current: resultsCurrent }">
+                            <h3>Results</h3>
+                            <result-params :result="result" :labels="labels" :timeSteps="timeSteps"></result-params>
+                            <result-dist :result="result" :labels="labels" :timeSteps="timeSteps"></result-dist>
+                        </div>
+                    </div>
+                `
+            });
+
+            Vue.component('form-dist', {
+                props: ['mapData'],
+                data: function() {
+                    return {
+                        labels: ["Correct", "Semantic", "Formal", "Mixed", "Unrelated", "Nonword"],
+                        inputs: [[NaN, NaN, NaN, NaN, NaN, NaN], [NaN, NaN, NaN, NaN, NaN, NaN]],
+                    };
+                },
+                template: `
+                    <div>
+                        <input-form :inputs="inputs" :labels="labels"></input-form>
+                        <results :inputs="this.inputs" :labels="labels"></results>
+                    </div>
+                `
+            });
+
+
+            let app = new Vue({
+                el: '#webfit-app',
+                template: `
+                    <div>
+                        <form-dist></form-dist>
+                    </div>
+                `
+            });
+
+            let parseFile = async () => {
+               try {
+                 const fetchResponse = await fetch("./map-nonzero.txt");
+                 console.log(fetchResponse.text());
+               } catch (ex) {
+                 console.log("Error in fetch");
+               }
+            };
+
+            function rmsd(x1, x2) {
+                return Math.sqrt(mean(x1.map((_, i) => Math.pow(x1[i] - x2[i], 2))));
+            }
+
+            function mean(x) {
+                return sum(x) / x.length;
+            }
+
+            function sum(items) {
+                return items.reduce((a, x) => a + x, 0.0);
+            }
+
+            function min(iterable, key) {
+                let [_, best] =  iterable.reduce(([bestScore, bestItem], item) => {
+                    let score = key(item);
+                    return Number.isNaN(bestScore) || (score < bestScore)
+                        ? [score, item]
+                        : [bestScore, bestItem];
+                }, [NaN, undefined]);
+                return best;
+            }
+
+            </script>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>

@@ -169,7 +169,7 @@
                     };
                 },
                 mounted() {
-                    this.$mapFileService.load("./map-nonzero.json").then((mapData) => {
+                    this.$mapFileService.load("./map-0.20.json").then((mapData) => {
                         this.mapDataLoaded = true;
                     });
                 },
@@ -262,15 +262,6 @@
                     </div>
                 `
             });
-
-            let parseFile = async () => {
-               try {
-                 const fetchResponse = await fetch("./map-nonzero.txt");
-                 console.log(fetchResponse.text());
-               } catch (ex) {
-                 console.log("Error in fetch");
-               }
-            };
 
             function rmsd(x1, x2) {
                 return Math.sqrt(mean(x1.map((_, i) => Math.pow(x1[i] - x2[i], 2))));

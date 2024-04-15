@@ -223,10 +223,10 @@
                 },
                 template: `
                     <div>
-<!--                        <div>-->
-<!--                            <input id="checkbox-normalize" type="checkbox" v-model="normalize"/>-->
-<!--                            <label for="checkbox-normalize">Normalize input</label>-->
-<!--                        </div>-->
+                        <div>
+                            <input id="checkbox-normalize" type="checkbox" v-model="normalize"/>
+                            <label for="checkbox-normalize">Normalize input</label>
+                        </div>
                         <button :disabled="!ready" @click="fit">Fit</button>
                         <div v-if="result" :class="{ current: resultsCurrent }">
                             <h3>Results</h3>

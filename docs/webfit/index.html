@@ -36,7 +36,7 @@
                 methods: {
                   onPaste(event, rowIdx, valueIdx) {
                     let text = event.clipboardData.getData('text');
-                    let values = text.split(/\s+/).map(s => parseFloat(s));
+                    let values = text.trim().split(/\s+/).map(s => parseFloat(s));
                     if (valueIdx !== 0 || values.length === 1 || values.filter(isNaN).length > 0) {
                       return true;
                     }

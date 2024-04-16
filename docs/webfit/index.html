@@ -33,6 +33,24 @@
                       set(value) { this.$emit('update:inputs', value); }
                     }
                 },
+                methods: {
+                  onPaste(event, rowIdx, valueIdx) {
+                    let text = event.clipboardData.getData('text');
+                    let values = text.split(/\s+/).map(s => parseFloat(s));
+                    if (valueIdx !== 0 || values.length === 1 || values.filter(isNaN).length > 0) {
+                      return true;
+                    }
+                    values.forEach((value, i) => {
+                      if (i > 5 && rowIdx !== 0) return;
+                      let updateValue = i % 6;
+                      let updateRow = i === updateValue ? rowIdx : rowIdx + 1;
+                      this.inputs[updateRow][updateValue] = value;
+                    });
+                    event.preventDefault();
+                    event.target.blur();
+                    return false;
+                  }
+                },
                 template: `
                         <table>
                             <thead>
@@ -49,7 +67,10 @@
                                         {{timeSteps[rowIdx]}}
                                     </td>
                                     <td v-for="value, valueIdx in row">
-                                        <input type="number" v-model:value.number="model[rowIdx][valueIdx]" style="width: 5em;"/>
+                                        <input type="number"
+                                               @paste="(e) => onPaste(e, rowIdx, valueIdx)"
+                                               v-model:value.number="model[rowIdx][valueIdx]"
+                                               style="width: 5em;"/>
                                     </td>
                                 </tr>
                             </tbody>
@@ -57,11 +78,44 @@
                 `
             });
 
+            Vue.component('boundaries-form', {
+                props: ['boundaries'],
+                emits: ['update:boundaries'],
+                computed: {
+                    model: {
+                      get() { return this.boundaries; },
+                      set(value) { this.$emit('update:boundaries', value); }
+                    }
+                },
+                template: `
+                      <table>
+                        <tr>
+                          <td>S min:</td>
+                          <td><input type="number" v-model:value.number="boundaries[0][0]" min="0.0" max="0.4"/></td>
+                          <td>S max:</td>
+                          <td><input type="number" v-model:value.number="boundaries[0][1]" min="0.0" max="0.4"/></td>
+                        </tr>
+                        <tr>
+                          <td>P min:</td>
+                          <td><input type="number" v-model:value.number="boundaries[1][0]" min="0.0" max="0.4"/></td>
+                          <td>P max:</td>
+                          <td><input type="number" v-model:value.number="boundaries[1][1]" min="0.0" max="0.4"/></td>
+                        </tr>
+                        <tr>
+                          <td>Decay min:</td>
+                          <td><input type="number" v-model:value.number="boundaries[2][0]" min="0.0" max="1.0"/></td>
+                          <td>Decay max:</td>
+                          <td><input type="number" v-model:value.number="boundaries[2][1]" min="0.0" max="1.0"/></td>
+                        </tr>
+                      </table>
+                `
+            });
+
             Vue.component('result-params', {
                 props: ['result', 'labels'],
                 methods: {
                     formatNumber(x, digits) {
-                        return x.toLocaleString(undefined, {maximumFractionDigits: digits || 20})
+                        return x.toLocaleString(undefined, {maximumFractionDigits: digits || 18})
                     },
                 },
                 template: `
@@ -159,7 +213,7 @@
             Vue.prototype.$mapFileService = MapFileService();
 
             Vue.component('results', {
-                props: ['inputs', 'labels', 'timeSteps'],
+                props: ['inputs', 'labels', 'timeSteps', 'boundaries'],
                 data: function() {
                     return {
                         result: null,
@@ -197,7 +251,13 @@
                         }
                     },
                     async nearest(target) {
+                        let [[sMin, sMax], [pMin, pMax], [decayMin, decayMax]] = this.boundaries;
                         let mapData = await this.$mapFileService.load("./map-nonzero.json");
+                        mapData = mapData.filter(([[s, p, decay], _]) =>
+                                  sMin <= s && s <= sMax
+                                  && pMin <= p && p <= pMax
+                                  && decayMin <= decay && decay <= decayMax
+                              );
                         let [bestParam, bestDist] = min(mapData, ([parameters, dist]) => {
                             return rmsd([...dist[0], ...dist[1]], [...target[0], ...target[1]]);
                         });
@@ -243,12 +303,20 @@
                     return {
                         labels: ["Correct", "Semantic", "Formal", "Mixed", "Unrelated", "Nonword"],
                         inputs: [[NaN, NaN, NaN, NaN, NaN, NaN], [NaN, NaN, NaN, NaN, NaN, NaN]],
+                        boundaries: [[0.0, 0.04], [0.0, 0.04], [0.0, 1.0]],
                     };
                 },
                 template: `
                     <div>
-                        <input-form :inputs="inputs" :labels="labels"></input-form>
-                        <results :inputs="this.inputs" :labels="labels"></results>
+                        <div>
+                            <h2>Boundaries</h2>
+                            <boundaries-form :boundaries="boundaries"></boundaries-form>
+                        </div>
+                        <div>
+                            <h2>Observations</h2>
+                            <input-form :inputs="inputs" :labels="labels"></input-form>
+                        </div>
+                        <results :inputs="this.inputs" :labels="labels" :boundaries="boundaries"></results>
                     </div>
                 `
             });

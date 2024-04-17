@@ -35,18 +35,17 @@
                 },
                 methods: {
                   onPaste(event, rowIdx, valueIdx) {
-                    let text = event.clipboardData.getData('text');
+                    let text = event.data;
                     let values = text.trim().split(/\s+/).map(s => parseFloat(s));
-                    if (valueIdx !== 0 || values.length === 1 || values.filter(isNaN).length > 0) {
+                    if (valueIdx !== 0 || values.length <= 1 || values.filter(isNaN).length > 0) {
                       return true;
                     }
                     values.forEach((value, i) => {
                       if (i > 5 && rowIdx !== 0) return;
                       let updateValue = i % 6;
                       let updateRow = i === updateValue ? rowIdx : rowIdx + 1;
-                      this.inputs[updateRow][updateValue] = value;
+                      this.model[updateRow][updateValue] = value;
                     });
-                    event.preventDefault();
                     event.target.blur();
                     return false;
                   }
@@ -68,7 +67,7 @@
                                     </td>
                                     <td v-for="value, valueIdx in row">
                                         <input type="number"
-                                               @paste="(e) => onPaste(e, rowIdx, valueIdx)"
+                                               @input="(e) => onPaste(e, rowIdx, valueIdx)"
                                                v-model:value.number="model[rowIdx][valueIdx]"
                                                style="width: 5em;"/>
                                     </td>

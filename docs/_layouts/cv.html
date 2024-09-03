@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+<head>
+  <meta charset='utf-8'>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <style>
+    html {
+      font-family: 'Helvetica Neue', Helvetica, Arial, serif;
+      line-height: 1.4em;
+    }
+    #content {
+      max-width: 7.5in;
+      margin: 0 auto;
+    }
+    section > ol {
+      list-style: none;
+      padding: 0 2em;
+    }
+    section > ol > li {
+      page-break-inside: avoid;
+      margin: 0.6em 0;
+    }
+    section.two-column > ol > li {
+      display: grid;
+      grid-template-columns: [left] 7fr [right] 3fr [end];
+    }
+    section.two-column > ol > li > h3,
+    section.two-column > ol > li > h4  {
+      grid-column: left;
+      margin: 0;
+    }
+    section.two-column > ol > li > address,
+    section.two-column > ol > li > time {
+      grid-column: right;
+      text-align: right;
+    }
+    section.two-column > ol > li > p {
+      grid-column: left / end;
+      margin: 0.4em 0;
+    }
+    ol.bibliography > li {
+      text-indent: -2em;
+      padding-left: 2em;
+    }
+    .scholar-robert {
+      font-weight: bold;
+    }
+    a, a:visited {
+      color: darkblue;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    @media only print {
+      .scholar-title {
+        font-weight: bold;
+      }
+    }
+
+  </style>
+  <!--[if lt IE 9]>
+  <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  {%- include scripts.html -%}
+
+  {% seo %}
+</head>
+
+<body>
+<div id="content">
+
+  <header class="header">
+    <h1 class="title">{{ page.title | escape }}</h1>
+  </header>
+
+  {%- include post-categories.html -%}
+
+  <div class="post-content">
+    {{ content }}
+
+    <section id="education" class="two-column">
+      <h2 class="section-header">Education</h2>
+
+      <ol class="section-items">
+      {% for entry in page.education %}
+        <li class="major-item">
+          <h3>{{ entry.degree }}</h3>
+          <time>{{ entry.begin_date }} –  {{ entry.end_date }}</time>
+          <h4>{{ entry.school }}</h4>
+          <address>{{ entry.location }}</address>
+        </li>
+      {% endfor %}
+      </ol>
+    </section>
+
+    <section id="publications">
+      <h2 class="section-header">Publications</h2>
+
+      {% bibliography --file publications %}
+    </section>
+
+    <section id="professional-background" class="two-column">
+      <h2 class="section-header">Professional Background</h2>
+
+      <ol class="section-items">
+      {% for entry in page.work %}
+      <li class="major-item">
+        <h3>{{ entry.title }}</h3>
+        <time>{{ entry.begin_date }} –  {{ entry.end_date }}</time>
+        <h4>{{ entry.organization }}</h4>
+        <address>{{ entry.location }}</address>
+        <p>{{ entry.description }}</p>
+      </li>
+      {% endfor %}
+      </ol>
+    </section>
+
+  </div>
+
+</div>
+</body>
+</html>

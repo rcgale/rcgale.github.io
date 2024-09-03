@@ -43,7 +43,7 @@ scholar:
   style: http://www.zotero.org/styles/association-for-computational-linguistics
   sort_by: year, month
   order: descending
-
+  bibliography_template: bib
 
 # Exclude from processing.
 # The following items will not be processed, by default.

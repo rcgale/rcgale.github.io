@@ -1,18 +1,14 @@
----
----
-
-{% assign reference = reference | replace: "Robert Gale", "<span class='scholar-robert'>Robert Gale</span>" %}
-{% assign reference = reference | replace: "Robert C. Gale", "<span class='scholar-robert'>Robert C. Gale</span>" %}
-
-{% assign parts = reference | split: entry.title %}
-
-{% capture title %}
-    {% if entry.url %}
-        <a href="{{entry.url}}"><span class='scholar-title'>{{entry.title}}</span></a>
-    {% else %}
-        <span class='scholar-title'>{{entry.title}}</span>
-    {%endif %}
-{% endcapture %}
-{% assign title = title | strip %}
-
-{{reference | replace: entry.title, title}}
+{% capture content %}
+    {% assign reference = reference | replace: "Robert Gale", "<span class='scholar-robert'>Robert Gale</span>" %}
+    {% assign reference = reference | replace: "Robert C. Gale", "<span class='scholar-robert'>Robert C. Gale</span>" %}
+    {% assign parts = reference | split: entry.title %}
+    {% capture title %}
+        {% if entry.url %}
+            <a href="{{entry.url}}"><span class='scholar-title'>{{entry.title}}</span></a>
+        {% else %}
+            <span class='scholar-title'>{{entry.title}}</span>
+        {%endif %}
+    {% endcapture %}
+    {% assign title = title | strip %}
+    {{reference | replace: entry.title, title}}
+{% endcapture %}{{content | strip }}

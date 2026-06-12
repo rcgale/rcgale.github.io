@@ -1,6 +1,7 @@
 {
   "workspaces": [
-    "phonologic"
+    "phonologic",
+    "webfit"
   ],
   "scripts": {
     "build": "npm run build --workspaces --if-present",

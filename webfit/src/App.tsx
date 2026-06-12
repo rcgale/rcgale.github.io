@@ -96,7 +96,7 @@ interface BoundariesFormProps {
 
 function BoundariesForm({disabled, boundaries, totalDataPoints, filteredDataPoints, setBoundaries}: BoundariesFormProps) {
     const {sMin, sMax, pMin, pMax, decayMin, decayMax} = boundaries;
-    const step = 1e-3;
+    const step = 1e-5;
 
     return (
         <table>

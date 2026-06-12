@@ -5,6 +5,11 @@
 
 version: 2
 updates:
+  - package-ecosystem: "npm"
+    pull-request-branch-name: "npm-dependencies"
+    schedule:
+      interval: "weekly"
+
   - package-ecosystem: "github-actions"
     directory: "/" # Location of package manifests
     schedule:

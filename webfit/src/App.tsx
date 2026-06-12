@@ -6,6 +6,9 @@ type FlatDistributionPair = [...Distribution, ...Distribution];
 type Parameters = [number, number, number];
 type MapData = [Parameters, DistributionPair][];
 
+
+const MAP_FILE_URL = "/webfit/map-0.20.json";
+
 interface Boundaries {
     sMin: number
     sMax: number
@@ -67,7 +70,7 @@ function InputForm({inputs, labels, setInputs}: InputFormProps) {
                             <input type="number"
                                    style={{width: "5em"}}
                                    defaultValue={Number.isNaN(value) ? "" : value}
-                                   onBlur={(ev) => setValue(rowIdx, valueIdx, parseFloat(ev.target.value))}
+                                   onChange={(ev) => setValue(rowIdx, valueIdx, parseFloat(ev.target.value))}
                                    onPaste={(ev) => {
                                        ev.currentTarget.blur();
                                        onPaste(rowIdx, valueIdx, ev.clipboardData.getData('text/plain'));
@@ -84,14 +87,16 @@ function InputForm({inputs, labels, setInputs}: InputFormProps) {
 
 
 interface BoundariesFormProps {
+    disabled: boolean
     boundaries: Boundaries
     totalDataPoints: number
     filteredDataPoints: number
     setBoundaries: (boundaries: Boundaries) => void
 }
 
-function BoundariesForm({boundaries, totalDataPoints, filteredDataPoints, setBoundaries}: BoundariesFormProps) {
+function BoundariesForm({disabled, boundaries, totalDataPoints, filteredDataPoints, setBoundaries}: BoundariesFormProps) {
     const {sMin, sMax, pMin, pMax, decayMin, decayMax} = boundaries;
+    const step = 1e-3;
 
     return (
         <table>
@@ -105,28 +110,28 @@ function BoundariesForm({boundaries, totalDataPoints, filteredDataPoints, setBou
 
                 <tr>
                   <td>S min:</td>
-                  <td><input type="number" defaultValue={sMin} min={0.0} max={0.4} step={1e-5}
-                             onBlur={(ev) => setBoundaries({...boundaries, sMin: parseFloat(ev.target.value)})}/></td>
+                  <td><input type="number" defaultValue={sMin} min={0.0} max={0.4} step={step} disabled={disabled}
+                             onChange={(ev) => setBoundaries({...boundaries, sMin: parseFloat(ev.target.value)})}/></td>
                   <td>S max:</td>
-                  <td><input type="number" defaultValue={sMax} min={0.0} max={0.4} step={1e-5}
-                             onBlur={(ev) => setBoundaries({...boundaries, sMax: parseFloat(ev.target.value)})}/></td>
+                  <td><input type="number" defaultValue={sMax} min={0.0} max={0.4} step={step} disabled={disabled}
+                             onChange={(ev) => setBoundaries({...boundaries, sMax: parseFloat(ev.target.value)})}/></td>
 
                 </tr>
                 <tr>
                   <td>P min:</td>
-                  <td><input type="number" defaultValue={pMin} min={0.0} max={0.4} step={1e-5}
-                             onBlur={(ev) => setBoundaries({...boundaries, pMin: parseFloat(ev.target.value)})}/></td>
+                  <td><input type="number" defaultValue={pMin} min={0.0} max={0.4} step={step} disabled={disabled}
+                             onChange={(ev) => setBoundaries({...boundaries, pMin: parseFloat(ev.target.value)})}/></td>
                   <td>P max:</td>
-                  <td><input type="number" defaultValue={pMax} min={0.0} max={0.4} step={1e-5}
-                             onBlur={(ev) => setBoundaries({...boundaries, pMax: parseFloat(ev.target.value)})}/></td>
+                  <td><input type="number" defaultValue={pMax} min={0.0} max={0.4} step={step} disabled={disabled}
+                             onChange={(ev) => setBoundaries({...boundaries, pMax: parseFloat(ev.target.value)})}/></td>
                 </tr>
                 <tr>
                   <td>Decay min:</td>
-                  <td><input type="number" defaultValue={decayMin} min={0.0} max={1.0} step={1e-5}
-                             onBlur={(ev) => setBoundaries({...boundaries, decayMin: parseFloat(ev.target.value)})}/></td>
+                  <td><input type="number" defaultValue={decayMin} min={0.0} max={1.0} step={step} disabled={disabled}
+                             onChange={(ev) => setBoundaries({...boundaries, decayMin: parseFloat(ev.target.value)})}/></td>
                   <td>Decay max:</td>
-                  <td><input type="number" defaultValue={decayMax} min={0.0} max={1.0} step={1e-5}
-                             onBlur={(ev) => setBoundaries({...boundaries, decayMax: parseFloat(ev.target.value)})}/></td>
+                  <td><input type="number" defaultValue={decayMax} min={0.0} max={1.0} step={step} disabled={disabled}
+                             onChange={(ev) => setBoundaries({...boundaries, decayMax: parseFloat(ev.target.value)})}/></td>
                 </tr>
             </tbody>
         </table>
@@ -182,7 +187,7 @@ function ResultDist({result, labels}: ResultDistProps) {
     const timeStepsOutput = ["ts=8", "ts=25"];
     return (
         <table>
-            <thead>
+            <thead style={{borderTop: "1.4em solid transparent"}}>
                 <tr>
                     <th>Time</th>
                     {labels.map((label, idx) =>
@@ -194,7 +199,7 @@ function ResultDist({result, labels}: ResultDistProps) {
                 </tr>
             </thead>
             {result.target.map((row, rowIdx) =>
-                <tbody key={rowIdx}>
+                <tbody key={rowIdx} style={{borderTop: "1.4em solid transparent"}}>
                     <tr>
                         <td>
                             {timeStepsInput[rowIdx]}
@@ -227,35 +232,6 @@ function ResultDist({result, labels}: ResultDistProps) {
     </table>
     );
 }
-
-// interface FormDistRowProps {
-//     ts: string
-//     inputDistribution: number[]
-//     onChange: (inputDistribution: number[]) => void
-// }
-//
-// function FormDistRow({ts, inputDistribution, onChange}: FormDistRowProps) {
-//     function updateValue(idx: number, value: number) {
-//         inputDistribution[idx] = value;
-//         onChange(inputDistribution);
-//     }
-//
-//     return (
-//         <tr>
-//             <td rowSpan={2} style={{verticalAlign: "middle"}}>
-//                 {ts}
-//             </td>
-//             {inputDistribution.map((value, idx) =>
-//                 <td key={idx}>
-//                     <input type="number"
-//                            defaultValue={value}
-//                            onBlur={(ev) => updateValue(idx, parseFloat(ev.target.value))}
-//                            style={{width: "5em"}} />
-//                 </td>
-//             )}
-//         </tr>
-//     );
-// }
 
 class MapFileService {
     static async load(url: string): Promise<MapData> {
@@ -313,7 +289,7 @@ function ResultsDisplay({inputs, labels, mapData, filteredMapData}: ResultsDispl
 }
 
 function FormDist() {
-
+    const [busy, setBusy] = useState(true);
     const [mapData, setMapData] = useState<MapData>();
     const [filteredMapData, setFilteredMapData] = useState<MapData>();
     const [inputs, setInputs] = useState<DistributionPair>([
@@ -324,21 +300,28 @@ function FormDist() {
         {sMin: 1e-9, sMax: 0.04, pMin: 1e-9, pMax: 0.04, decayMin: 1e-9, decayMax: 1.0}
     );
     const labels = ["Correct", "Semantic", "Formal", "Mixed", "Unrelated", "Nonword"]
+    const debounceMs = 100;
 
     useEffect(() => {
-        MapFileService.load("./map-0.20.json").then(setMapData)
+        MapFileService.load(MAP_FILE_URL).then(setMapData)
     }, []);
 
     useEffect(() => {
-        if (mapData === undefined) return;
+        const handler = setTimeout(() => {
+            if (mapData === undefined) return;
+            setBusy(false);
 
-        const {sMin, sMax, pMin, pMax, decayMin, decayMax} = boundaries;
-        const filteredMapData = mapData.filter(([[s, p, decay], _]) =>
-            sMin <= s && s <= sMax
-            && pMin <= p && p <= pMax
-            && decayMin <= decay && decay <= decayMax
-        );
-        setFilteredMapData(filteredMapData);
+            const {sMin, sMax, pMin, pMax, decayMin, decayMax} = boundaries;
+            const filteredMapData = mapData.filter(([[s, p, decay], _]) =>
+                sMin <= s && s <= sMax
+                && pMin <= p && p <= pMax
+                && decayMin <= decay && decay <= decayMax
+            );
+            setFilteredMapData(filteredMapData);
+            setBusy(false);
+        }, debounceMs);
+
+        return () => clearTimeout(handler);
 
     }, [mapData, boundaries])
 
@@ -348,7 +331,8 @@ function FormDist() {
             : <div>
                     <div>
                         <h2>Boundaries</h2>
-                        <BoundariesForm boundaries={boundaries}
+                        <BoundariesForm disabled={busy}
+                                        boundaries={boundaries}
                                         setBoundaries={setBoundaries}
                                         totalDataPoints={mapData.length}
                                         filteredDataPoints={filteredMapData.length}
@@ -363,6 +347,9 @@ function FormDist() {
                                                mapData={mapData}
                                                filteredMapData={filteredMapData}
                     />}
+                    <p style={{textAlign: "center", fontStyle: "italic", marginTop: "1em"}}>
+                        full map file at <a href={MAP_FILE_URL} target="_blank">{MAP_FILE_URL}</a>
+                    </p>
                 </div>
     );
 }

@@ -8,6 +8,7 @@ type MapData = [Parameters, DistributionPair][];
 
 
 const MAP_FILE_URL = "/webfit/map-0.20.json";
+const TINY = 1e-9;
 
 interface Boundaries {
     sMin: number
@@ -67,7 +68,9 @@ function InputForm({inputs, labels, setInputs}: InputFormProps) {
                     </td>
                     {row.map((value, valueIdx) =>
                         <td key={valueIdx}>
-                            <input type="number"
+                            <input type="text"
+                                   inputMode="numeric"
+                                   pattern="\d*"
                                    style={{width: "5em"}}
                                    defaultValue={Number.isNaN(value) ? "" : value}
                                    onChange={(ev) => setValue(rowIdx, valueIdx, parseFloat(ev.target.value))}
@@ -87,16 +90,26 @@ function InputForm({inputs, labels, setInputs}: InputFormProps) {
 
 
 interface BoundariesFormProps {
-    disabled: boolean
     boundaries: Boundaries
     totalDataPoints: number
     filteredDataPoints: number
     setBoundaries: (boundaries: Boundaries) => void
 }
 
-function BoundariesForm({disabled, boundaries, totalDataPoints, filteredDataPoints, setBoundaries}: BoundariesFormProps) {
-    const {sMin, sMax, pMin, pMax, decayMin, decayMax} = boundaries;
+function BoundariesForm({boundaries, totalDataPoints, filteredDataPoints, setBoundaries}: BoundariesFormProps) {
     const step = 1e-5;
+
+    const rangePairs = [
+        {parameter: "S", limit: 0.04, minVar: "sMin" as keyof Boundaries, maxVar: "sMax" as keyof Boundaries,},
+        {parameter: "P", limit: 0.04, minVar: "pMin" as keyof Boundaries, maxVar: "pMax" as keyof Boundaries,},
+        {parameter: "Decay", limit: 1.0, minVar: "decayMin" as keyof Boundaries, maxVar: "decayMax" as keyof Boundaries,},
+    ]
+    function updateBoundary(key: keyof Boundaries, newValue: number) {
+        if (boundaries[key] == newValue) return;
+        const updated = structuredClone(boundaries);
+        updated[key] = newValue;
+        setBoundaries(updated)
+    }
 
     return (
         <table>
@@ -107,32 +120,42 @@ function BoundariesForm({disabled, boundaries, totalDataPoints, filteredDataPoin
                   <td>Map points excluded:</td>
                   <td>{(totalDataPoints - filteredDataPoints).toLocaleString()}</td>
                 </tr>
+                {rangePairs.map(({parameter, limit, minVar, maxVar}) => {
 
-                <tr>
-                  <td>S min:</td>
-                  <td><input type="number" defaultValue={sMin} min={0.0} max={0.4} step={step} disabled={disabled}
-                             onChange={(ev) => setBoundaries({...boundaries, sMin: parseFloat(ev.target.value)})}/></td>
-                  <td>S max:</td>
-                  <td><input type="number" defaultValue={sMax} min={0.0} max={0.4} step={step} disabled={disabled}
-                             onChange={(ev) => setBoundaries({...boundaries, sMax: parseFloat(ev.target.value)})}/></td>
+                    let minValue = boundaries[minVar];
+                    let maxValue = boundaries[maxVar];
 
-                </tr>
-                <tr>
-                  <td>P min:</td>
-                  <td><input type="number" defaultValue={pMin} min={0.0} max={0.4} step={step} disabled={disabled}
-                             onChange={(ev) => setBoundaries({...boundaries, pMin: parseFloat(ev.target.value)})}/></td>
-                  <td>P max:</td>
-                  <td><input type="number" defaultValue={pMax} min={0.0} max={0.4} step={step} disabled={disabled}
-                             onChange={(ev) => setBoundaries({...boundaries, pMax: parseFloat(ev.target.value)})}/></td>
-                </tr>
-                <tr>
-                  <td>Decay min:</td>
-                  <td><input type="number" defaultValue={decayMin} min={0.0} max={1.0} step={step} disabled={disabled}
-                             onChange={(ev) => setBoundaries({...boundaries, decayMin: parseFloat(ev.target.value)})}/></td>
-                  <td>Decay max:</td>
-                  <td><input type="number" defaultValue={decayMax} min={0.0} max={1.0} step={step} disabled={disabled}
-                             onChange={(ev) => setBoundaries({...boundaries, decayMax: parseFloat(ev.target.value)})}/></td>
-                </tr>
+                    return <tr key={parameter}>
+                        <td>
+                            {parameter} min:
+                        </td>
+                        <td>
+                            <input type="number"
+                                   value={minValue || TINY}
+                                   min={0.0}
+                                   max={maxValue}
+                                   step={step}
+                                   style={{width: "8em"}}
+                                   onChange={(ev) =>
+                                       updateBoundary(minVar, parseFloat(ev.target.value) || TINY)
+                                   }
+                            />
+                        </td>
+                        <td>
+                            {parameter} max:
+                        </td>
+                        <td>
+                            <input type="number"
+                                   value={maxValue || TINY}
+                                   min={0.0}
+                                   max={limit}
+                                   step={step}
+                                   onChange={(ev) =>
+                                       updateBoundary(maxVar, Math.max(minValue, parseFloat(ev.target.value)))
+                                   } />
+                       </td>
+                    </tr>
+                })}
             </tbody>
         </table>
     );
@@ -289,41 +312,38 @@ function ResultsDisplay({inputs, labels, mapData, filteredMapData}: ResultsDispl
 }
 
 function FormDist() {
-    const [busy, setBusy] = useState(true);
-    const [mapData, setMapData] = useState<MapData>();
-    const [filteredMapData, setFilteredMapData] = useState<MapData>();
+    const [mapData, setMapData] = useState<MapData>([]);
+    const [filteredMapData, setFilteredMapData] = useState<MapData>([]);
     const [inputs, setInputs] = useState<DistributionPair>([
         [NaN, NaN, NaN, NaN, NaN, NaN],
         [NaN, NaN, NaN, NaN, NaN, NaN]
     ]);
     const [boundaries, setBoundaries] = useState(
-        {sMin: 1e-9, sMax: 0.04, pMin: 1e-9, pMax: 0.04, decayMin: 1e-9, decayMax: 1.0}
+        {sMin: TINY, sMax: 0.04, pMin: TINY, pMax: 0.04, decayMin: TINY, decayMax: 1.0}
     );
     const labels = ["Correct", "Semantic", "Formal", "Mixed", "Unrelated", "Nonword"]
-    const debounceMs = 100;
 
     useEffect(() => {
         MapFileService.load(MAP_FILE_URL).then(setMapData)
     }, []);
 
     useEffect(() => {
-        const handler = setTimeout(() => {
-            if (mapData === undefined) return;
-            setBusy(false);
-
-            const {sMin, sMax, pMin, pMax, decayMin, decayMax} = boundaries;
-            const filteredMapData = mapData.filter(([[s, p, decay], _]) =>
-                sMin <= s && s <= sMax
-                && pMin <= p && p <= pMax
-                && decayMin <= decay && decay <= decayMax
-            );
-            setFilteredMapData(filteredMapData);
-            setBusy(false);
-        }, debounceMs);
-
+        if (!mapData.length) return;
+        const handler = setTimeout(() => updateFilteredMapData(), 0);
         return () => clearTimeout(handler);
-
     }, [mapData, boundaries])
+
+    function updateFilteredMapData() {
+        console.log({starting: true, ...boundaries});
+        const {sMin, sMax, pMin, pMax, decayMin, decayMax} = boundaries;
+        const filteredMapData = mapData.filter(([[s, p, decay], _]) =>
+            sMin <= s && s <= sMax
+            && pMin <= p && p <= pMax
+            && decayMin <= decay && decay <= decayMax
+        );
+        setFilteredMapData(filteredMapData);
+        console.log({done: true, ...boundaries});
+    }
 
     return (
         (mapData === undefined || filteredMapData === undefined)
@@ -331,8 +351,7 @@ function FormDist() {
             : <div>
                     <div>
                         <h2>Boundaries</h2>
-                        <BoundariesForm disabled={busy}
-                                        boundaries={boundaries}
+                        <BoundariesForm boundaries={boundaries}
                                         setBoundaries={setBoundaries}
                                         totalDataPoints={mapData.length}
                                         filteredDataPoints={filteredMapData.length}

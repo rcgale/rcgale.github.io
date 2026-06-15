@@ -1,10 +1,15 @@
 import {useEffect, useState} from "react";
+import Button from 'react-bootstrap/Button';
 
 type Distribution = [number, number, number, number, number, number]
 type DistributionPair = [Distribution, Distribution];
 type FlatDistributionPair = [...Distribution, ...Distribution];
 type Parameters = [number, number, number];
 type MapData = [Parameters, DistributionPair][];
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
+import {Col, Container, Row} from "react-bootstrap";
 
 
 const MAP_FILE_URL = "/webfit/map-0.20.json";
@@ -161,39 +166,47 @@ function BoundariesForm({boundaries, totalDataPoints, filteredDataPoints, setBou
     );
 }
 
-interface Result {
-    target: DistributionPair
+interface ResultItem {
+    distributions: DistributionPair
     s: number
     p: number
     decay: number
-    distributions: DistributionPair
-    rmsd: {separate: [number, number], combined: number}
+}
+
+interface NBestResults {
+    target: DistributionPair
+    bestItems: NBest<ResultItem>
 }
 
 interface ResultParamsProps {
-    result: Result
+    s: number
+    p: number
+    decay: number
+    score: number
     labels: string[]
 }
 
-function ResultParams({result}: ResultParamsProps) {
+function ResultParams({s, p, decay, score}: ResultParamsProps) {
     function formatNumber(x: number, digits: number = 18) {
         return x.toLocaleString(undefined, {maximumFractionDigits: digits})
     }
 
     return (
-        <table>
+        <table className="fit-result-parameters">
             <thead>
                 <tr>
                     <th>S</th>
                     <th>P</th>
                     <th>Decay</th>
+                    <th>RMSD</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>{formatNumber(result.s)}</td>
-                    <td>{formatNumber(result.p)}</td>
-                    <td>{formatNumber(result.decay)}</td>
+                    <td>{formatNumber(s)}</td>
+                    <td>{formatNumber(p)}</td>
+                    <td>{formatNumber(decay)}</td>
+                    <td>{score.toFixed(4)}</td>
                 </tr>
             </tbody>
         </table>
@@ -201,13 +214,18 @@ function ResultParams({result}: ResultParamsProps) {
 }
 
 interface ResultDistProps {
-    result: Result
+    target: DistributionPair
+    distributions: DistributionPair
     labels: string[]
 }
 
-function ResultDist({result, labels}: ResultDistProps) {
+function ResultDist({target, distributions, labels}: ResultDistProps) {
     const timeStepsInput = ["1s", "5s"];
     const timeStepsOutput = ["ts=8", "ts=25"];
+    const separateScores = [
+        rmsd(distributions[0], target[0]),
+        rmsd(distributions[1], target[1]),
+    ];
     return (
         <table>
             <thead style={{borderTop: "1.4em solid transparent"}}>
@@ -221,7 +239,7 @@ function ResultDist({result, labels}: ResultDistProps) {
                     <th>RMSD</th>
                 </tr>
             </thead>
-            {result.target.map((row, rowIdx) =>
+            {target.map((row, rowIdx) =>
                 <tbody key={rowIdx} style={{borderTop: "1.4em solid transparent"}}>
                     <tr>
                         <td>
@@ -235,24 +253,22 @@ function ResultDist({result, labels}: ResultDistProps) {
                             </td>
                         )}
                         <td rowSpan={2} style={{verticalAlign: "middle"}}>
-                            {result.rmsd.separate[rowIdx].toFixed(4)}
+                            {separateScores[rowIdx].toFixed(4)}
                         </td>
                     </tr>
                     <tr>
                         <td>
                             {timeStepsOutput[rowIdx]}
                         </td>
-                        {result.distributions[rowIdx].map((value, valueIdx) =>
+                        {distributions[rowIdx].map((value, valueIdx) =>
                             <td key={valueIdx}>
                                 {value?.toFixed(4)}
-                                {/*<span v-if="!Number.isNaN(value)">{value.toFixed(4)}</span>&nbsp;*/}
                             </td>
-
                         )}
                     </tr>
                 </tbody>
             )}
-    </table>
+        </table>
     );
 }
 
@@ -273,41 +289,62 @@ interface ResultsDisplayProps {
 
 function ResultsDisplay({inputs, labels, mapData, filteredMapData}: ResultsDisplayProps) {
     const [normalize, setNormalize] = useState(true);
-    const [result, setResult] = useState<Result>();
+    const [results, setResults] = useState<NBestResults>();
+    const [nBest, setNBest] = useState(10);
 
     const target = normalize
         ? inputs.map(getNormalized) as DistributionPair
         : inputs;
 
     const ready = mapData && sum(target[0]) > 0 && sum(target[1]) > 0;
-    const resultsCurrent = result && JSON.stringify(result.target) == JSON.stringify(target);
+    const resultsCurrent = results && JSON.stringify(results.target) == JSON.stringify(target);
 
     function fit() {
-        setResult(undefined)
+        setResults(undefined)
         // const target = target.map(row => [...row]);
-        doFit(filteredMapData, target).then(setResult)
+        doFit(filteredMapData, target, nBest).then(setResults)
     }
 
     const className = resultsCurrent && "current" || "";
 
     return (
-            <div>
-                <div>
-                    <input id="checkbox-normalize"
-                           type="checkbox"
-                           defaultChecked={normalize}
-                           onChange={(ev) => setNormalize(ev.target.checked)}/>
-                    <label htmlFor="checkbox-normalize">Normalize input</label>
-                </div>
-                <button disabled={!ready} onClick={() => fit()}>Fit</button>
-                {result &&
-                    <div className={className}>
-                        <h3>Results</h3>
-                        <ResultParams result={result} labels={labels} />
-                        <ResultDist result={result} labels={labels} />
-                    </div>
-                }
-            </div>
+        <div>
+            <Container>
+                <Row className="fit-submit-row">
+                    <Col xs={6}>
+                        Show &nbsp;
+                        <input type="number"
+                               style={{width:"3em"}}
+                               defaultValue={nBest}
+                               onChange={(ev) => setNBest(parseFloat(ev.target.value))}
+                               />
+                        &nbsp; best matches
+                    </Col>
+                    <Col xs={5}>
+                        <input id="checkbox-normalize"
+                               type="checkbox"
+                               defaultChecked={normalize}
+                               onChange={(ev) => setNormalize(ev.target.checked)}/>
+                        <label htmlFor="checkbox-normalize">Normalize input</label>
+                    </Col>
+                    <Col xs={1} className="text-end">
+                        <Button disabled={!ready} onClick={() => fit()}>Fit</Button>
+                    </Col>
+                </Row>
+            </Container>
+            {results && resultsCurrent && <div className={`fit-results ${className}`}>
+                    {results.bestItems.map(({score, item}, resultIdx) => {
+                        const {s, p, decay, distributions} = item;
+                        return <div key={resultIdx} className="fit-result">
+                            <h4>Result #{1 + resultIdx}</h4>
+                            <ResultParams s={s} p={p} decay={decay} score={score} labels={labels}/>
+                            <ResultDist target={target}
+                                        distributions={distributions}
+                                        labels={labels}/>
+                        </div>
+                    })}
+            </div>}
+        </div>
     );
 }
 
@@ -390,14 +427,28 @@ function sum(items: number[]) {
     return items.reduce((a, x) => a + x, 0.0);
 }
 
-function min<T>(iterable: T[], key: (item: T) => number) {
-    let [_, best] =  iterable.reduce(([bestScore, bestItem], item) => {
-        let score = key(item);
-        return Number.isNaN(bestScore) || (score < bestScore)
-            ? [score, item]
-            : [bestScore, bestItem];
-    }, [NaN, undefined] as [number, T]);
-    return best;
+class NBest<T> extends Array<{score: number, item: T}> {
+
+    constructor(n: number, ...items: {score: number, item: T}[]) {
+        super();
+        this.n = n;
+        this.update(...items);
+    }
+
+    n: number
+
+    update(...items: {score: number, item: T}[]) {
+        for (const {score, item} of items) {
+            const threshold = this.at(this.length - 1)?.score;
+            if (threshold === undefined || score < threshold) {
+                const idx = this.findIndex(x => x.score > score);
+                this.splice(idx, 0, {score, item})
+                while (this.length > this.n) {
+                    this.pop()
+                }
+            }
+        }
+    }
 }
 
 function getNormalized(row: Distribution): Distribution {
@@ -405,23 +456,13 @@ function getNormalized(row: Distribution): Distribution {
     return row.map(x => (x / total)) as Distribution;
 }
 
-async function doFit(data: MapData, target: DistributionPair): Promise<Result> {
+async function doFit(data: MapData, target: DistributionPair, nBest: number): Promise<NBestResults> {
     const flatten = (d: DistributionPair) => (d.flatMap(x => x) as FlatDistributionPair)
     const flatTarget = flatten(target);
     const withRmsd = data.map(([[s, p, decay], distributions]) => ({
-        s, p, decay, distributions, error: rmsd(flatten(distributions), flatTarget)
+        item: {s, p, decay, distributions},
+        score: rmsd(flatten(distributions), flatTarget)
     }));
-    let {error, distributions, ...best} = min(withRmsd, ({error}) => error);
-    return {
-        ...best,
-        target,
-        distributions,
-        rmsd: {
-            combined: error,
-            separate: [
-                rmsd(distributions[0], target[0]),
-                rmsd(distributions[1], target[1]),
-            ],
-        },
-    }
+    const bestItems = new NBest(nBest, ...withRmsd);
+    return {target, bestItems}
 }

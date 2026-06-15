@@ -1,0 +1,19 @@
+.fit-submit-row {
+    margin: 1.4em 0;
+}
+.fit-submit-row * {
+    vertical-align: middle;
+}
+
+.fit-result {
+    width: 100%;
+    padding-bottom: 2.8em;
+}
+.fit-results h3, .fit-results h4 {
+    padding-left: 0;
+}
+
+.fit-result-parameters th,
+.fit-result-parameters td {
+    padding: 0 1em;
+}

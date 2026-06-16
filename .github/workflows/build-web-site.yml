@@ -33,7 +33,7 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-          cache-dependency-path: "package.json""
+          cache-dependency-path: "package.json"
       - name: 🏗 NPM Install
         run: npm install && npm install --save @phonologic/viewer@latest
       - name: 🚜 Build sandbox

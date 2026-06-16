@@ -11,7 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@phonologic/viewer": "^0.1.0-alpha17",
+    "@phonologic/viewer": "latest",
     "@types/bootstrap": ">=5",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",

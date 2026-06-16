@@ -4,11 +4,6 @@
     "webfit"
   ],
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
-    "postbuild": "npm run copy:phonologic",
-    "copy:phonologic": "cd phonologic/build && copyfiles -E \"**\" $INIT_CWD/docs/phonologic"
-  },
-  "devDependencies": {
-    "copyfiles": "^2.4.1"
+    "build": "npm run build --workspaces --if-present"
   }
 }

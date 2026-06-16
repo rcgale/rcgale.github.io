@@ -1,18 +1,35 @@
 {
   "name": "test",
-  "version": "1.0.0",
+  "private": true,
   "homepage": "https://robertcgale.com/phonologic",
+  "version": "1.0.0",
+  "type": "module",
   "scripts": {
-    "prebuild": "npm run copy:temp && npm run copy:env",
-    "build": "cd temp && npm run build && copyfiles -E \"./build/**\" ..",
-    "start": "cd temp && npm run start",
-    "copy:temp": "(cd $(npm ls @phonologic/viewer -p) && copyfiles -E -F \"./**\" $INIT_CWD/temp)",
-    "copy:env": "copyfiles -a .env* ./temp"
-  },
-  "devDependencies": {
-    "copyfiles": "^2.4.1"
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@phonologic/viewer": "latest"
+    "@phonologic/viewer": "file:/Users/galer/dev/phonologic/phonologic-js/viewer",
+    "@types/bootstrap": ">=5",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "bootstrap": "^5.3.8",
+    "react": "^19.2.6",
+    "react-bootstrap": "^2.10.10",
+    "react-dom": "^19.2.6"
+  },
+  "devDependencies": {
+    "@types/node": "^24.12.3",
+    "@eslint/js": "^10.0.1",
+    "@vitejs/plugin-react": "^6.0.1",
+    "eslint": "^10.3.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.6.0",
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.59.2",
+    "vite": "^8.0.12"
   }
 }
